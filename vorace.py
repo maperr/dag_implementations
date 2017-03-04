@@ -1,5 +1,5 @@
 from collections import defaultdict, deque
-import math
+import math, datetime
 
 # Class to represent a graph
 class Graph:
@@ -66,7 +66,9 @@ class Graph:
         self.graph.pop(u)
 
 
-    def vorace(self):
+    def vorace(self, p, t):
+        time_init = datetime.datetime.now()
+
         L = []
         c = self.longestChain()
         while len(c) > 0:
@@ -83,5 +85,14 @@ class Graph:
         n = 0 # todo
         g = math.pow(2,0.5 * h * n)
 
+        time_end = datetime.datetime.now()
+        time_delta = time_end - time_init
+
+        if p:
+            print(g)
+        if t:
+            print(time_delta)
+
+
 g = Graph("tp2-donnees/poset10-4a")
-g.vorace()
+g.vorace(True, True)
