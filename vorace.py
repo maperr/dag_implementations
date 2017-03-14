@@ -78,11 +78,13 @@ class Graph:
             c = self.longestChain()
         for u in self.graph:
             L.append(u)
-        # approximation du nombre d'extensions linéaires
+
+        # approximation du nombre d'extensions lineaires
+        # TODO: log est en base 2!
         h = 0
         for c in L:
             h = h + ((len(c)/self.V )* math.log((len(c)/self.V)))
-        n = 0 # todo
+        n = self.V # n est le nombre de sommets
         g = math.pow(2,0.5 * h * n)
 
         time_end = datetime.datetime.now()
@@ -94,5 +96,6 @@ class Graph:
             print(time_delta)
 
 
-g = Graph("tp2-donnees/poset10-4a")
+# g = Graph("tp2-donnees/poset10-4a")
+g = Graph("test")
 g.vorace(True, True)
