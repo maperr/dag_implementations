@@ -11,6 +11,7 @@ class Graph:
         # get nb of vertices
         nbVertices = int(lines[0].split(" ")[0])
         lines.pop(0)
+        self.result = 0 # No. of linear extensions
         self.V = nbVertices  # No. of vertices
         self.graph = defaultdict(list)  # dictionary containing adjacency List
         for i in range(0, nbVertices):
@@ -25,29 +26,49 @@ class Graph:
     # function to add an edge to graph
     def addEdge(self, u, v):
         self.graph[u].append(v)
-        self.indegree[v] += 1
 
     # get the vertexes that don't have ancestors
     def possibleVertex(self):
         p = []
         for v in self.graph:
-            if len(v) == 0:
+            if len(self.graph[v]) == 0:
                 p.append(v)
         return p
 
-    # def backtrack(G)
-    #   for n in [possible vertex (no ancestor)]
-    #       enlever n
-    #       backtrack(G)
-    #       rajouter n
-    def backtrack(self):
-        for v in self.possibleVertex():
-            self.graph.pop(v)
-            self.backtrack()
+    def removeVertex(self, u):
+        L = []
+        self.graph.pop(u)
+        for v in self.graph:
+            if self.graph[v].__contains__(u):
+                L.append(v)
+                self.graph[v].remove(u)
+        return L
 
+    def reinsertVertex(self, u, pointedBy, pointsTo):
+        self.graph[u] = pointsTo
+        for v in pointedBy:
+            self.graph[v].append(u)
 
+    def backtrackutil(self):
+        if len(self.possibleVertex()) == 0:
+            self.result += 1
+        else:
+            for v in self.possibleVertex():
+                pointsTo = self.graph[v]
+                pointedBy = self.removeVertex(v)
+                self.backtrackutil()
+                self.reinsertVertex(v, pointedBy, pointsTo)
 
+    def backtrack(self, p, t):
+        time_init = datetime.datetime.now()
+        self.backtrackutil()
+        time_end = datetime.datetime.now()
+        time_delta = time_end - time_init
+        if p:
+            print(self.result)
+        if t:
+            print(time_delta)
 
-#g = Graph("test")
-g = Graph("tp2-donnees/poset18-8c")
-g.topologicalSort(True, True)
+#g = Graph("ex")
+g = Graph("tp2-donnees/poset14-4c")
+g.backtrack(True, True)
