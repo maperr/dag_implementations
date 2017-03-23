@@ -80,12 +80,10 @@ class Graph:
             L.append(u)
 
         # approximation du nombre d'extensions lineaires
-        # TODO: log est en base 2!
         h = 0
         for c in L:
-            h = h + ((len(c)/self.V )* math.log((len(c)/self.V)))
-        n = self.V # n est le nombre de sommets
-        g = math.pow(2,0.5 * h * n)
+            h += -1 * (len(c) / self.V) * math.log((len(c) / self.V), 2)
+        g = math.pow(2, 0.5 * h * self.V)
 
         time_end = datetime.datetime.now()
         time_delta = time_end - time_init
@@ -96,6 +94,6 @@ class Graph:
             print(time_delta)
 
 
-# g = Graph("tp2-donnees/poset10-4a")
-g = Graph("test")
+g = Graph("tp2-donnees/poset14-4c")
+# g = Graph("test")
 g.vorace(True, True)

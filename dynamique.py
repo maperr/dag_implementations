@@ -1,6 +1,5 @@
 from collections import defaultdict, deque
-import math, datetime
-import numpy
+import datetime
 
 # Class to represent a graph
 class Graph:
@@ -9,12 +8,10 @@ class Graph:
         with open(f) as file:
             lines = file.readlines()
 
-        # get nb of vertices
-        nbVertices = int(lines[0].split(" ")[0])
+        self.V = int(lines[0].split(" ")[0])  # No. of vertices
         lines.pop(0)
-        self.V = nbVertices  # No. of vertices
         self.graph = defaultdict(list)  # dictionary containing adjacency List
-        for i in range(0,nbVertices):
+        for i in range(0, self.V):
             self.graph[i] = []
 
         for l in lines:
@@ -51,11 +48,8 @@ class Graph:
             vertexes = self.getArcsEndingAt(u)
             for v in vertexes:
                 pred[v] = u
-                #if q.__contains__(v):
-                for i in q:
-                    if i == v:
-                        q.remove(v)
-                        break
+                if q.__contains__(v):
+                    q.remove(v)
                 q.append(v)
         c = []
         while last != -1:
@@ -69,10 +63,7 @@ class Graph:
                 self.graph[v].remove(u)
         self.graph.pop(u)
 
-
     def vorace(self):
-        time_init = datetime.datetime.now()
-
         L = []
         c = self.longestChain()
         while len(c) > 0:
@@ -82,27 +73,40 @@ class Graph:
             c = self.longestChain()
         for u in self.graph:
             L.append(u)
-
         return L
 
-    def dynamique(self, p, t):
+    def floydFermetureTransitive(self):
+        n = len(self.graph)
+        for k in range(n):
+            for i in range(n):
+                for j in range(n):
+                    if self.graph[i].__contains__(k):
+                        if self.graph[k].__contains__(j):
+                            self.graph[i].append(j)
+
+    def dynamic(self, p, t):
+        # effectuer la fermeture transitive
+        self.floydFermetureTransitive()
         L = self.vorace()
+        lengthOfArray = 1
+        for l in L:
+            lengthOfArray *= len(l) + 1
+        A = [1] * lengthOfArray
 
-        # creation du tableau, on ajoute une dimension par chaine obtenue.
-        # on commence par trouver la chaine la plus longue, ce sera le nb d'elem par dimension
-        max = 0
-        for c in L:
-            if len(c) > max:
-                max = len(c)
-        max += 1
-        arr = numpy.zeros(max)
-        for dim in range(len(c) - 1):
-            arr = numpy.expand_dims(arr, axis=1)
-        for dim in arr:
-            dim = numpy.zeros(max)
-        x = 2
+        ndim = len(L)
+        for i in range(len(A)):
+            indexes = []
+            for j in range(ndim):
+                indexes.append(i*j - 1)
+            self.calcLinExt(indexes)
+
+    def calcLinExt(self, i):
+        # find why sometimes we do 0*x instead of 1*x
+        # TODO
+        return 0
 
 
-    # g = Graph("tp2-donnees/poset10-4a")
-g = Graph("ex")
-g.dynamique(True, True)
+
+# g = Graph("tp2-donnees/poset18-8c")
+g = Graph('ex')
+g.dynamic(True, True)

@@ -1,6 +1,7 @@
 from collections import defaultdict
 import datetime
 
+
 # Class to represent a graph
 class Graph:
     # creates a graph from a file
@@ -11,7 +12,7 @@ class Graph:
         # get nb of vertices
         nbVertices = int(lines[0].split(" ")[0])
         lines.pop(0)
-        self.result = 0 # No. of linear extensions
+        self.result = 0  # No. of linear extensions
         self.V = nbVertices  # No. of vertices
         self.graph = defaultdict(list)  # dictionary containing adjacency List
         for i in range(0, nbVertices):
@@ -69,6 +70,7 @@ class Graph:
         if t:
             print(time_delta)
 
-#g = Graph("ex")
-g = Graph("tp2-donnees/poset14-4c")
+
+# g = Graph("ex")
+g = Graph("tp2-donnees/poset10-4a")
 g.backtrack(True, True)
