@@ -94,6 +94,6 @@ class Graph:
             print(time_delta)
 
 
-g = Graph("tp2-donnees/poset14-4c")
-# g = Graph("test")
+#g = Graph("tp2-donnees/poset14-4c")
+g = Graph("test")
 g.vorace(True, True)
