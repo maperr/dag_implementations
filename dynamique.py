@@ -8,6 +8,9 @@ class Graph:
         with open(f) as file:
             lines = file.readlines()
 
+        self.mat = []
+        self.longestChains = []
+
         self.V = int(lines[0].split(" ")[0])  # No. of vertices
         lines.pop(0)
         self.graph = defaultdict(list)  # dictionary containing adjacency List
@@ -73,7 +76,7 @@ class Graph:
             c = self.longestChain()
         for u in self.graph:
             L.append(u)
-        return L
+        self.longestChains = L
 
     def floydFermetureTransitive(self):
         n = len(self.graph)
@@ -84,29 +87,42 @@ class Graph:
                         if self.graph[k].__contains__(j):
                             self.graph[i].append(j)
 
-    def dynamic(self, p, t):
-        # effectuer la fermeture transitive
-        self.floydFermetureTransitive()
-        L = self.vorace()
-        lengthOfArray = 1
+    # A : Array
+    # v : A[2][4][1][2] -> every value is a dim index
+    # returns value at that cell.
+    def returnValue(self, A, v):
+        return A
+
+    # L : longest chains
+    def createMat(self, L):
+        v = []
         for l in L:
-            lengthOfArray *= len(l) + 1
-        A = [1] * lengthOfArray
+            v.append(len(l) + 1)
 
-        ndim = len(L)
-        for i in range(len(A)):
-            indexes = []
-            for j in range(ndim):
-                indexes.append(i*j - 1)
-            self.calcLinExt(indexes)
+        length = 1
+        for i in v:
+            length *= i
+        self.mat = [1] * length
 
-    def calcLinExt(self, i):
-        # find why sometimes we do 0*x instead of 1*x
-        # TODO
-        return 0
+    def dynamic(self, p, t):
+        self.floydFermetureTransitive() # effectuer la fermeture transitive
+        self.vorace()
+        self.createMat(self.longestChains)
+
+        v = [0] * len(self.longestChains) # represente l'index de l'elem que l'on accede
+        for i in self.mat:
+            i = self.longestChains - 1
+            for c in self.longestChains:
+                v[i]
+
+
+    def calcLinExt(self, v):
+        for i in v:
+            print(str(i) + ' ')
+        print('\n')
 
 
 
-# g = Graph("tp2-donnees/poset18-8c")
+#g = Graph("tp2-donnees/poset18-8c")
 g = Graph('ex')
 g.dynamic(True, True)
