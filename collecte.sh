@@ -12,19 +12,17 @@
 # Vous pouvez par après vous inspirer de ce script pour évaluer toutes les
 # séries avec tous les algorithmes.
 
-for algo in {"vorace","retourArriere","dynamique"}; do
+for algo in {"retourArriere","kek"}; do
     # Pour chaque fichier de série.
     for serie in {"poset10","poset14","poset18","poset22","poset26","poset30"}; do
         for taille in {"4","6","8","10"}; do
             # Pour chaque exemplaire dans une série.
-            for ex in $(ls $serie $taille); do
+            for ex in $(ls $serie/$taille); do
                 # On receuille le temps d'exécution dans t.
-                t=$(timeout 180 ./tp.sh -a $algo -e ${serie}/${ex} -t)
-                # On évalue la taille de l'exemplaire.
-                n=$(cat ${serie}/${ex} | wc -l)
+                t=$(timeout 180 ./tp.sh -a $algo -e ${serie}/${taille}/${ex} -t -p)
                 # Si jamais on mesure un temps, on l'insère dans le bon fichier.
                 if [ t != "" ]; then
-                    echo $n,$t >> ./${algo}_${serie}_${taille}.csv
+                    echo $t >> ./results/${algo}_${serie}_${taille}.csv
                 fi
             done
         done
